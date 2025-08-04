@@ -34,7 +34,7 @@ class ChatListScreen extends StatelessWidget {
           Expanded(
             child: ListView.separated(
               itemCount: chats.length,
-              separatorBuilder: (_, __) => const Divider(height: 1, color: Colors.white12),
+              separatorBuilder: (index,context) => const Divider(height: 1, color: Colors.white12),
               itemBuilder: (context, i) {
                 final chat = chats[i];
                 return ListTile(

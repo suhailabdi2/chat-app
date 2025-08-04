@@ -1,15 +1,16 @@
+import 'package:chatify_app/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatDetailScreen extends StatelessWidget {
+class ChatDetailScreen extends GetView<AuthController> {
   ChatDetailScreen({Key? key}) : super(key: key);
 
-  final List<Map<String, String>> messages = [
-    {'from': 'me', 'text': 'Hello!'},
-    {'from': 'Alice', 'text': 'Hey!'},
-    {'from': 'me', 'text': 'How are you?'},
-    {'from': 'Alice', 'text': 'I\'m good!'},
-  ];
+  // final List<Map<String, String>> messages = [
+  //   {'from': 'me', 'text': 'Hello!'},
+  //   {'from': 'Alice', 'text': 'Hey!'},
+  //   {'from': 'me', 'text': 'How are you?'},
+  //   {'from': 'Alice', 'text': 'I\'m good!'},
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -19,29 +20,33 @@ class ChatDetailScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: messages.length,
-              itemBuilder: (context, i) {
-                final msg = messages[i];
-                final isMe = msg['from'] == 'me';
-                return Align(
-                  alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: isMe ? const Color(0xFF00FF85) : const Color(0xFF23272A),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      msg['text']!,
-                      style: TextStyle(color: isMe ? Colors.black : Colors.white),
-                    ),
-                  ),
-                );
-              },
-            ),
+            child: Obx(() {
+
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: controller.messages.length,
+                itemBuilder: (context, i) {
+                  var msg = controller.messages[i];
+                  var isMe = msg['from'] == 'me';
+                  return Align(
+                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: isMe ? const Color(0xFF00FF85) : const Color(0xFF23272A),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          msg['text']!,
+                          style: TextStyle(color: isMe ? Colors.black : Colors.white),
+                        ),
+                      ),
+                    );
+                  }
+                ,
+              );
+            }),
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -49,6 +54,7 @@ class ChatDetailScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: TextField(
+                    controller: controller.textFieldController,
                     decoration: InputDecoration(
                       hintText: 'Type a message',
                       filled: true,
@@ -65,7 +71,7 @@ class ChatDetailScreen extends StatelessWidget {
                   mini: true,
                   backgroundColor: const Color(0xFF00FF85),
                   child: const Icon(Icons.send, color: Colors.black),
-                  onPressed: () {},
+                  onPressed: controller.send,
                 ),
               ],
             ),
@@ -74,4 +80,4 @@ class ChatDetailScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}

@@ -11,7 +11,8 @@ class AuthController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final otpControllers = List.generate(4, (_) => TextEditingController());
-
+  final textFieldController = TextEditingController();
+  RxList<Map<String, String>> messages = <Map<String, String>>[].obs;
   // Mock login
   void login() async {
     if (!(loginFormKey.currentState?.saveAndValidate() ?? false)) return;
@@ -20,7 +21,13 @@ class AuthController extends GetxController {
     isLoading.value = false;
     Get.toNamed('/otp');
   }
-
+  void send() async{
+    messages.add({"from": "me", "text": textFieldController.text});
+    textFieldController.clear();
+    print(messages);
+    await Future.delayed(const Duration(seconds: 1));
+    messages.add({"from": "Alice", "text": "Hey!"});
+  }
   // Mock OTP verify
   void verifyOtp() async {
     if (!(otpFormKey.currentState?.saveAndValidate() ?? false)) return;

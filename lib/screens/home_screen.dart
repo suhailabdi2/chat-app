@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static final List<Widget> _pages = <Widget>[
     Center(
       child: Text(
-        'Welcome to Home!',
+        'This is the welcome page',
         style: TextStyle(fontSize: 28, color: Color(0xFF00FF85)),
       ),
     ),
