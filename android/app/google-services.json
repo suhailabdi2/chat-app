@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "379960841880",
+    "project_id": "chat-app-d265d",
+    "storage_bucket": "chat-app-d265d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379960841880:android:5165e566fc3c79d463a2ed",
+        "android_client_info": {
+          "package_name": "com.example.chatify_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwxTCxcabY41rDX7St91iz2l-bgQ6a8rk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
