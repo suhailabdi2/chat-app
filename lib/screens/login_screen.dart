@@ -33,6 +33,7 @@ class LoginScreen extends GetView<AuthController> {
                 const SizedBox(height: 32),
                 FormBuilderTextField(
                   name: 'email',
+                  controller: controller.emailController,
                   style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
                     labelText: 'Email',

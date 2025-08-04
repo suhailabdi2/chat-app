@@ -5,12 +5,6 @@ import 'package:get/get.dart';
 class ChatDetailScreen extends GetView<AuthController> {
   ChatDetailScreen({Key? key}) : super(key: key);
 
-  // final List<Map<String, String>> messages = [
-  //   {'from': 'me', 'text': 'Hello!'},
-  //   {'from': 'Alice', 'text': 'Hey!'},
-  //   {'from': 'me', 'text': 'How are you?'},
-  //   {'from': 'Alice', 'text': 'I\'m good!'},
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +14,7 @@ class ChatDetailScreen extends GetView<AuthController> {
       body: Column(
         children: [
           Expanded(
-            child: Obx(() {
-
+            child: Obx((){
               return ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: controller.messages.length,

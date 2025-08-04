@@ -23,7 +23,14 @@ class ProfileScreen extends StatelessWidget {
             const Text('john.doe@email.com', style: TextStyle(color: Colors.white70)),
             const SizedBox(height: 32),
             ElevatedButton.icon(
-              onPressed: () => Get.offAllNamed('/login'),
+              onPressed: () {
+                Get.offAllNamed('/login');
+                final snackBar = SnackBar(
+                  content: const Text('Logged out successfully'),
+                  backgroundColor: Colors.green,
+                );
+               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              },
               icon: const Icon(Icons.logout),
               label: const Text('Logout'),
               style: ElevatedButton.styleFrom(

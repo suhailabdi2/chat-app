@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/auth_controller.dart';
 
-class ChatListScreen extends StatelessWidget {
+class ChatListScreen extends GetView<AuthController> {
   ChatListScreen({Key? key}) : super(key: key);
-
-  final List<Map<String, String>> chats = [
-    {'name': 'Alice', 'last': 'Hey!'},
-    {'name': 'Bob', 'last': 'How are you?'},
-    {'name': 'Charlie', 'last': 'Let\'s meet!'},
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final chats = controller.chats;
     return Scaffold(
       appBar: AppBar(title: const Text('Chats')),
       body: Column(
@@ -45,6 +41,7 @@ class ChatListScreen extends StatelessWidget {
                   title: Text(chat['name']!, style: const TextStyle(color: Colors.white)),
                   subtitle: Text(chat['last']!, style: const TextStyle(color: Colors.white70)),
                   onTap: () => Get.toNamed('/chat', arguments: chat['name']),
+
                 );
               },
             ),
