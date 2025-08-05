@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'chat_list_screen.dart';
@@ -29,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedIndex = index;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
           if (_selectedIndex == 0)
             IconButton(
               icon: const Icon(Icons.logout),
-              onPressed: () => Get.offAllNamed('/login'),
+              onPressed:()async{
+                await FirebaseAuth.instance.signOut();
+
+                Get.offAllNamed('/login');
+                Get.snackbar('Logout', 'You have been logged out');
+              },
               tooltip: 'Logout',
             ),
         ],

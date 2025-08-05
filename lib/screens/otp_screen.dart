@@ -61,6 +61,9 @@ class OtpScreen extends GetView<AuthController> {
                           if (value != null && value.isNotEmpty && index < 3) {
                             FocusScope.of(context).nextFocus();
                           }
+                          if(value == null || value.isEmpty && index > 0) {
+                            FocusScope.of(context).previousFocus();
+                          }
                         },
                       ),
                     );
@@ -68,7 +71,7 @@ class OtpScreen extends GetView<AuthController> {
                 ),
                 const SizedBox(height: 32),
                 Obx(() => ElevatedButton(
-                  onPressed: controller.isLoading.value ? null : controller.verifyOtp,
+                  onPressed: controller.isLoading.value ? null : controller.sendOTP,
                   child: controller.isLoading.value
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
                       : const Padding(

@@ -87,7 +87,17 @@ class LoginScreen extends GetView<AuthController> {
                           child: Text('Login'),
                         ),
                 )),
-                const SizedBox(height: 40),
+                
+                TextButton(
+                  onPressed: () {
+                    Get.toNamed('/signup');
+                  },
+                  child: const Text('Create an Account'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 16),
+                  ),
+                ),
               ],
             ),
           ),

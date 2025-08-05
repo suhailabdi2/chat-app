@@ -1,3 +1,4 @@
+import 'package:chatify_app/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'controllers/auth_controller.dart';
@@ -11,13 +12,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 void main() async {
-  Get.put(AuthController());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   print('Firebase initialized');
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(AuthController());
     return GetMaterialApp(
       title: 'Chatify',
       debugShowCheckedModeBanner: false,
@@ -65,7 +67,7 @@ class MyApp extends StatelessWidget {
           titleLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      initialRoute: '/login',
+      initialRoute: '/signup',
       getPages: [
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/otp', page: () => const OtpScreen()),
@@ -73,6 +75,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/chats', page: () => ChatListScreen()),
         GetPage(name: '/chat', page: () => ChatDetailScreen()),
         GetPage(name: '/profile', page: () => const ProfileScreen()),
+        GetPage(name: '/signup', page: () => const SignUpScreen()),
       ],
     );
   }
