@@ -8,6 +8,7 @@ class OtpScreen extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.isLoading.value = false;
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -70,8 +71,16 @@ class OtpScreen extends GetView<AuthController> {
                   }),
                 ),
                 const SizedBox(height: 32),
+                TextButton(onPressed: controller.sendOTP,
+                    child: Text("Click for OTP"),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 16),
+                  ),
+                ),
+                const SizedBox(height: 32),
                 Obx(() => ElevatedButton(
-                  onPressed: controller.isLoading.value ? null : controller.sendOTP,
+                  onPressed: controller.isLoading.value ? null : controller.verifyOtp,
                   child: controller.isLoading.value
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
                       : const Padding(

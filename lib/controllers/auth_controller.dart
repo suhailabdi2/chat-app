@@ -92,15 +92,9 @@ class AuthController extends GetxController {
     if (otpFormKey.currentState!.validate()) {
       try {
         isLoading.value = true;
-        QuerySnapshot doc = await FirebaseFirestore.instance
-            .collection('users')
-            .where('email', isEqualTo: emailController.text.trim())
-            .get();
-        if(doc.docs.isNotEmpty){
-          var user1 = doc.docs[0];
-          var userEmail = user1['email'];
+        var userEmail = FirebaseAuth.instance.currentUser!.email.toString();
          EmailOTP.config(
-           appName: "Chatify App",
+           appName: "com.example.chatify_app",
            otpType: OTPType.numeric,
            expiry : 30000,
            emailTheme: EmailTheme.v6,
@@ -109,7 +103,7 @@ class AuthController extends GetxController {
          );
           isLoading.value = false;
           EmailOTP.sendOTP(email: userEmail);
-        }
+
 
     } catch(e){
         Get.snackbar("Error", e.toString());
@@ -117,6 +111,7 @@ class AuthController extends GetxController {
       }
     }
   }
+
   void send() async{
     messages.add({"from": "me", "text": textFieldController.text});
     textFieldController.clear();
@@ -127,6 +122,11 @@ class AuthController extends GetxController {
   // Mock OTP verify
   void verifyOtp() async {
     if (otpFormKey.currentState!.validate()) {
+      if (EmailOTP.verifyOTP(otp: otpControllers[0].text+otpControllers[1].text+otpControllers[2].text+otpControllers[3].text)) {
+        Get.offAllNamed('/home');
+      } else {
+        Get.snackbar('Error', 'Invalid OTP');
+      }
 
     }
   }
