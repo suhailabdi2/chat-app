@@ -9,7 +9,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'dart:math';
 class AuthController extends GetxController {
   // State
-  final phoneNumber=''.obs;
   RxBool isLoading = false.obs;
   RxBool isPasswordHidden = true.obs;
   RxBool isPasswordHidden2 = true.obs;
@@ -39,7 +38,7 @@ class AuthController extends GetxController {
         Future.delayed(const Duration(seconds: 3),(){
           print("Login Successful");
           isLoading.value=false;
-          Get.offAllNamed('/otp');
+          Get.offAllNamed('/home');
         });
       }on FirebaseAuthException catch(e){
         if(e.code=='INVALID_LOGIN_CREDENTIALS'){
@@ -89,12 +88,11 @@ class AuthController extends GetxController {
 
   }
   void sendOTP() async {
-    if (otpFormKey.currentState!.validate()) {
       try {
         isLoading.value = true;
         var userEmail = FirebaseAuth.instance.currentUser!.email.toString();
          EmailOTP.config(
-           appName: "com.example.chatify_app",
+           appName: "Chatify App",
            otpType: OTPType.numeric,
            expiry : 30000,
            emailTheme: EmailTheme.v6,
@@ -109,7 +107,7 @@ class AuthController extends GetxController {
         Get.snackbar("Error", e.toString());
         isLoading.value=false;
       }
-    }
+
   }
 
   void send() async{
