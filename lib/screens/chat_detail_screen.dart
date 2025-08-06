@@ -2,6 +2,8 @@ import 'package:chatify_app/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../controllers/auth_controller.dart';
+
 class ChatDetailScreen extends GetView<AuthController> {
   ChatDetailScreen({Key? key}) : super(key: key);
 
@@ -64,7 +66,16 @@ class ChatDetailScreen extends GetView<AuthController> {
                   mini: true,
                   backgroundColor: const Color(0xFF00FF85),
                   child: const Icon(Icons.send, color: Colors.black),
-                  onPressed: controller.send,
+                  onPressed: (){
+                    if(controller.textFieldController.text.isNotEmpty){
+                      controller.sendMessage(
+                        senderId: 'me',
+                        receiverId: chatName,
+                        text: controller.textFieldController.text,
+                      );
+                      controller.textFieldController.clear();
+    }
+                  },
                 ),
               ],
             ),

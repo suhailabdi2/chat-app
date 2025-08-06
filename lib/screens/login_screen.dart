@@ -64,6 +64,7 @@ class LoginScreen extends GetView<AuthController> {
                         onPressed: () {
                           controller.isPasswordHidden.value = !controller.isPasswordHidden.value;
                         },
+
                       ),
                     ),
                     validator: (value) {

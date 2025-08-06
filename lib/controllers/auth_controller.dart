@@ -23,16 +23,14 @@ class AuthController extends GetxController {
   final passwordSignInController = TextEditingController();
   RxList<Map<String, String>> messages = <Map<String, String>>[].obs;
   RxList<Map<String,String>> chats = <Map<String,String>>[{"name": "Suhail","last": "Hello"},
-    {"name": "Sharon","last": "Hello"},
-    {"name":"Kagia","last": "Hello"}].obs;
+    {"name": "Sharon","last":"Hi" },
+    {"name":"Kagia","last":"Hey"}
+  ].obs;
   final phoneNumberController = TextEditingController();
-
-  // Mock login
   void login() async {
     String message = '';
     if(loginFormKey.currentState!.validate()){
       try{
-        isLoading.value=true;
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
@@ -57,6 +55,7 @@ class AuthController extends GetxController {
       }
     }
   }
+
   void signup() async {
     if(signupFormKey.currentState!.validate()){
       try{
@@ -65,20 +64,19 @@ class AuthController extends GetxController {
           email: emailSignUpController.text,
           password: passwordSignInController.text,
         );
-
-        Future.delayed(const Duration(seconds: 3),(){
-          print("Signup Successful");
-          isLoading.value=false;
-          Get.offAllNamed('/otp');
-        });
         FirebaseFirestore.instance.collection('users').add({
           'email': emailSignUpController.text,
           'password': passwordSignInController.text,
           'phoneNumber': phoneNumberController.text,
           'uid':FirebaseAuth.instance.currentUser!.uid,
         });
-
-      }on FirebaseAuthException catch(e){
+        Future.delayed(const Duration(seconds: 3),(){
+          print("Signup Successful");
+          isLoading.value=false;
+          Get.offAllNamed('/otp');
+        });
+      }
+      on FirebaseAuthException catch(e){
           if(e.code=='email-already-exists'){
             Get.toNamed('/login');
             Get.snackbar('Error', 'Email already exists');
@@ -114,14 +112,24 @@ class AuthController extends GetxController {
       }
 
   }
+  // Future<void> sendMessage({
+  //   required String senderId,
+  //   required String receiverId,
+  //   required String text,}) async {
+  //   String chatId = getChatId(senderId, receiverId);
+  //   DocumentReference chatDoc = FirebaseFirestore.instance.collection('chats').doc(chatId);
+  //   await chatDoc.collection('messages').add({
+  //     'from': senderId,
+  //     'text': text,
+  //   });
+  //   await chatDoc.update({
+  //     'last': text,
+  //     'lastSenderId': senderId,
+  //   },);
+  //   }
+  // }
 
-  void send() async{
-    messages.add({"from": "me", "text": textFieldController.text});
-    textFieldController.clear();
-    print(messages);
-    await Future.delayed(const Duration(seconds: 3));
-    messages.add({"from": "you", "text": "Hey!"});
-  }
+
   // Mock OTP verify
   void verifyOtp() async {
     if (otpFormKey.currentState!.validate()) {
@@ -134,6 +142,8 @@ class AuthController extends GetxController {
     }
   }
 
+
+
   @override
   void onClose() {
     emailController.dispose();
@@ -143,4 +153,39 @@ class AuthController extends GetxController {
     }
     super.onClose();
   }
-} 
+  Future<void>sendMessage({
+    required String senderId,
+    required String receiverId,
+    required String text,
+  }) async{
+    String chatId = getChatId(senderId, receiverId);
+    DocumentReference chatDoc = FirebaseFirestore.instance.collection('chats').doc(chatId);
+    await chatDoc.collection('messages').add({
+      'from': senderId,
+      'text': text,
+    });
+    await chatDoc.update({
+      'last': text,
+      'lastSenderId': senderId,
+    });
+  }
+  String getChatId(String uid, String rid) {
+    return uid.hashCode <= rid.hashCode ? '$uid-$rid' : '$rid-$uid';
+  }
+}
+// Future<void> sendMessage({
+//   required String senderId,
+//   required String receiverId,
+//   required String text,}) async {
+//   String chatId = getChatId(senderId, receiverId);
+//   DocumentReference chatDoc = FirebaseFirestore.instance.collection('chats').doc(chatId);
+//   await chatDoc.collection('messages').add({
+//     'from': senderId,
+//     'text': text,
+//   });
+//   await chatDoc.update({
+//     'last': text,
+//     'lastSenderId': senderId,
+//   },);
+// }
+
