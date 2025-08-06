@@ -5,6 +5,7 @@ import '../controllers/auth_controller.dart';
 class ChatListScreen extends GetView<AuthController> {
   ChatListScreen({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     final chats = controller.chats;
@@ -14,17 +15,29 @@ class ChatListScreen extends GetView<AuthController> {
         children: [
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search',
-                prefixIcon: const Icon(Icons.search, color: Color(0xFF00FF85)),
-                filled: true,
-                fillColor: const Color(0xFF23272A),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: const Icon(Icons.search, color: Color(0xFF00FF85)),
+                      filled: true,
+                      fillColor: const Color(0xFF23272A),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                FloatingActionButton(
+                  mini: true,
+                  child: const Icon(Icons.search, color: Colors.black),
+                  backgroundColor: const Color(0xFF00FF85),
+                  onPressed: () {},
+                ),
+              ],
             ),
           ),
           Expanded(

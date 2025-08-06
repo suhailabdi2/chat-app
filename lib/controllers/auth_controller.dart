@@ -22,7 +22,9 @@ class AuthController extends GetxController {
   final emailSignUpController = TextEditingController();
   final passwordSignInController = TextEditingController();
   RxList<Map<String, String>> messages = <Map<String, String>>[].obs;
-  RxList<Map<String,String>> chats = <Map<String,String>>[].obs;
+  RxList<Map<String,String>> chats = <Map<String,String>>[{"name": "Suhail","last": "Hello"},
+    {"name": "Sharon","last": "Hello"},
+    {"name":"Kagia","last": "Hello"}].obs;
   final phoneNumberController = TextEditingController();
 
   // Mock login
@@ -38,6 +40,8 @@ class AuthController extends GetxController {
         Future.delayed(const Duration(seconds: 3),(){
           print("Login Successful");
           isLoading.value=false;
+          emailController.clear();
+          passwordController.clear();
           Get.offAllNamed('/home');
         });
       }on FirebaseAuthException catch(e){
@@ -71,6 +75,7 @@ class AuthController extends GetxController {
           'email': emailSignUpController.text,
           'password': passwordSignInController.text,
           'phoneNumber': phoneNumberController.text,
+          'uid':FirebaseAuth.instance.currentUser!.uid,
         });
 
       }on FirebaseAuthException catch(e){
@@ -114,8 +119,8 @@ class AuthController extends GetxController {
     messages.add({"from": "me", "text": textFieldController.text});
     textFieldController.clear();
     print(messages);
-    await Future.delayed(const Duration(seconds: 1));
-    messages.add({"from": "Alice", "text": "Hey!"});
+    await Future.delayed(const Duration(seconds: 3));
+    messages.add({"from": "you", "text": "Hey!"});
   }
   // Mock OTP verify
   void verifyOtp() async {
