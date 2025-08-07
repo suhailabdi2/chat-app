@@ -1,3 +1,4 @@
+import 'package:chatify_app/screens/UserScreens.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,12 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   static final List<Widget> _pages = <Widget>[
-    Center(
-      child: Text(
-        'This is the welcome page',
-        style: TextStyle(fontSize: 28, color: Color(0xFF00FF85)),
-      ),
-    ),
+    UserScreens(),
     ChatListScreen(),
     ProfileScreen(),
   ];

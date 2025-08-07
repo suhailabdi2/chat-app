@@ -1,7 +1,9 @@
+import 'package:chatify_app/screens/UserScreens.dart';
 import 'package:chatify_app/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'controllers/auth_controller.dart';
+import 'controllers/chat_controller.dart';
 import 'screens/login_screen.dart';
 import 'screens/otp_screen.dart';
 import 'screens/home_screen.dart';
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(AuthController());
+    Get.put(ChatController());
     return GetMaterialApp(
       title: 'Chatify',
       debugShowCheckedModeBanner: false,
@@ -76,6 +79,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/chat', page: () => ChatDetailScreen()),
         GetPage(name: '/profile', page: () => const ProfileScreen()),
         GetPage(name: '/signup', page: () => const SignUpScreen()),
+        GetPage(name: '/user', page: () =>  UserScreens()),
       ],
     );
   }

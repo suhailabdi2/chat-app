@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
@@ -8,7 +10,8 @@ class ChatListScreen extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    final chats = controller.chats;
+
+
     return Scaffold(
       appBar: AppBar(title: const Text('Chats')),
       body: Column(
@@ -40,25 +43,35 @@ class ChatListScreen extends GetView<AuthController> {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: chats.length,
-              separatorBuilder: (index,context) => const Divider(height: 1, color: Colors.white12),
-              itemBuilder: (context, i) {
-                final chat = chats[i];
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: const Color(0xFF00FF85),
-                    child: Text(chat['name']![0]),
-                  ),
-                  title: Text(chat['name']!, style: const TextStyle(color: Colors.white)),
-                  subtitle: Text(chat['last']!, style: const TextStyle(color: Colors.white70)),
-                  onTap: () => Get.toNamed('/chat', arguments: chat['name']),
+          StreamBuilder(stream: FirebaseFirestore.instance.collection('chats').snapshots(),
+              builder: (context, snapshot) {
+                if(snapshot.hasError){
+                  return Text("Error ${snapshot.error}");
+                }
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final chats = snapshot.data!.docs;
 
+                return Expanded(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: chats.length,
+                    separatorBuilder: (index,context) => const Divider(height: 1, color: Colors.white12),
+                    itemBuilder: (context, i) {
+                      final chat = chats[i];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: const Color(0xFF00FF85),
+                          child: Text("${i+1}"),
+                        ),
+                        title: Text("${chat.data()['receiverID']}"),
+                        onTap: () => Get.toNamed('/chat', arguments: {"chatId":chat.id,"receiverUID":chat.data()['receiverID']}),
+                      );
+                    },
+                  ),
                 );
-              },
-            ),
-          ),
+              },),
         ],
       ),
       floatingActionButton: FloatingActionButton(

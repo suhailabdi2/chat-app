@@ -22,9 +22,8 @@ class AuthController extends GetxController {
   final emailSignUpController = TextEditingController();
   final passwordSignInController = TextEditingController();
   RxList<Map<String, String>> messages = <Map<String, String>>[].obs;
-  RxList<Map<String,String>> chats = <Map<String,String>>[{"name": "Suhail","last": "Hello"},
-    {"name": "Sharon","last":"Hi" },
-    {"name":"Kagia","last":"Hey"}
+  RxList<Map<String,String>> chats = <Map<String,String>>[
+    {"name":"Suhail","last":"Hey There!"},{"name":"Sharon","last":"How are you?"}
   ].obs;
 
   final phoneNumberController = TextEditingController();
