@@ -26,11 +26,13 @@ class AuthController extends GetxController {
     {"name": "Sharon","last":"Hi" },
     {"name":"Kagia","last":"Hey"}
   ].obs;
+
   final phoneNumberController = TextEditingController();
   void login() async {
     String message = '';
     if(loginFormKey.currentState!.validate()){
       try{
+        isLoading.value=true;
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
@@ -40,6 +42,7 @@ class AuthController extends GetxController {
           isLoading.value=false;
           emailController.clear();
           passwordController.clear();
+          isLoading.value=false;
           Get.offAllNamed('/home');
         });
       }on FirebaseAuthException catch(e){
@@ -112,25 +115,7 @@ class AuthController extends GetxController {
       }
 
   }
-  // Future<void> sendMessage({
-  //   required String senderId,
-  //   required String receiverId,
-  //   required String text,}) async {
-  //   String chatId = getChatId(senderId, receiverId);
-  //   DocumentReference chatDoc = FirebaseFirestore.instance.collection('chats').doc(chatId);
-  //   await chatDoc.collection('messages').add({
-  //     'from': senderId,
-  //     'text': text,
-  //   });
-  //   await chatDoc.update({
-  //     'last': text,
-  //     'lastSenderId': senderId,
-  //   },);
-  //   }
-  // }
 
-
-  // Mock OTP verify
   void verifyOtp() async {
     if (otpFormKey.currentState!.validate()) {
       if (EmailOTP.verifyOTP(otp: otpControllers[0].text+otpControllers[1].text+otpControllers[2].text+otpControllers[3].text)) {
@@ -173,19 +158,5 @@ class AuthController extends GetxController {
     return uid.hashCode <= rid.hashCode ? '$uid-$rid' : '$rid-$uid';
   }
 }
-// Future<void> sendMessage({
-//   required String senderId,
-//   required String receiverId,
-//   required String text,}) async {
-//   String chatId = getChatId(senderId, receiverId);
-//   DocumentReference chatDoc = FirebaseFirestore.instance.collection('chats').doc(chatId);
-//   await chatDoc.collection('messages').add({
-//     'from': senderId,
-//     'text': text,
-//   });
-//   await chatDoc.update({
-//     'last': text,
-//     'lastSenderId': senderId,
-//   },);
-// }
+
 
