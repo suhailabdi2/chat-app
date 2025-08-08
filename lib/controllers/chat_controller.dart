@@ -13,11 +13,21 @@ class ChatController {
       "from": FirebaseAuth.instance.currentUser!.uid,
       "to": receiverUID,
       "message": message,
-      "createdAt": "${DateTime.now().hour}/${DateTime.now().minute}",
+      "createdAt": "${DateTime
+          .now()
+          .hour}/${DateTime
+          .now()
+          .minute}",
       "chatId": generateChatId(receiverUID),
     };
   }
-
+  Future getMessages(String chatID) async {
+    var chatDoc = FirebaseFirestore.instance
+        .collection('chats');
+    chatDoc.doc(chatID).get().then((value) {
+      print(value.data()!['messages']);
+    });
+  }
   // send the chat message to the server
   Future sendIndividualMessage(String receiverUID, String message) async {
     DocumentReference chatDoc = FirebaseFirestore.instance
@@ -27,16 +37,13 @@ class ChatController {
   }
 
   // send the chat message to the server
-  Future sendExistingIndividualMessage(String chatID, String message,String receiverUID) async {
+  Future sendExistingIndividualMessage(String chatID, String message, String receiverUID) async {
     var chatDoc = FirebaseFirestore.instance
-        .collection('chats')
-        ;
-
-    chatDoc.doc(chatID).get().then((value){
-     List results = value.data()!['messages'];
-
-     results.add(messagePayload(receiverUID, message));
-     print(results);
+        .collection('chats');
+    chatDoc.doc(chatID).get().then((value) {
+      List results = value.data()!['messages'];
+      results.add(messagePayload(receiverUID, message));
+      print(results);
       chatDoc.doc(chatID).update({"messages": results});
     });
 

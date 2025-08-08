@@ -29,13 +29,49 @@ class ChatDetailScreen extends GetView<AuthController> {
                 if (snapshot.hasError) {
                   Get.snackbar('Error', snapshot.error.toString());
                 }
-
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 ;
                 final data = snapshot.data!.data();
-                return Text("${data!['messages']}");
+                final messages = data!['messages'];
+                print(messages);
+                return ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messages[index];
+                    return Align(
+                      alignment:
+                          message['from'] ==
+                              FirebaseAuth.instance.currentUser!.uid
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              message['from'] ==
+                                  FirebaseAuth.instance.currentUser!.uid
+                              ? const Color(0xFF00FF85)
+                              : const Color(0xFF23272A),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          message['message'],
+                          style:
+                              message['from'] ==
+                                  FirebaseAuth.instance.currentUser!.uid
+                              ? const TextStyle(color: Colors.black)
+                              : const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
             ),
           ),
@@ -66,7 +102,8 @@ class ChatDetailScreen extends GetView<AuthController> {
                     if (controller.textFieldController.text.isNotEmpty) {
                       chatController.sendExistingIndividualMessage(
                         chatName,
-                        controller.textFieldController.text,Get.arguments['receiverUID']
+                        controller.textFieldController.text,
+                        Get.arguments['receiverUID'],
                       );
                       controller.textFieldController.clear();
                     }

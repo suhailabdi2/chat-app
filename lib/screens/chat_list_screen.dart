@@ -11,7 +11,6 @@ class ChatListScreen extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
 
-
     return Scaffold(
       appBar: AppBar(title: const Text('Chats')),
       body: Column(
@@ -52,7 +51,7 @@ class ChatListScreen extends GetView<AuthController> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 final chats = snapshot.data!.docs;
-
+                final chatMessages = FirebaseFirestore.instance.collection("chats");
                 return Expanded(
                   child: ListView.separated(
                     shrinkWrap: true,
@@ -66,6 +65,7 @@ class ChatListScreen extends GetView<AuthController> {
                           child: Text("${i+1}"),
                         ),
                         title: Text("${chat.data()['receiverID']}"),
+
                         onTap: () => Get.toNamed('/chat', arguments: {"chatId":chat.id,"receiverUID":chat.data()['receiverID']}),
                       );
                     },
