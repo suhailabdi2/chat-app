@@ -21,13 +21,16 @@ class UserScreens extends GetView<AuthController> {
                 children: [
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('users').where('uid', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                        .collection('users')
+                        .where(
+                          'uid',
+                          isNotEqualTo: FirebaseAuth.instance.currentUser!.uid,
+                        )
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         Get.snackbar('Error', snapshot.error.toString());
                       }
-
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       }
@@ -37,13 +40,21 @@ class UserScreens extends GetView<AuthController> {
                         child: ListView.builder(
                           itemCount: data.length,
                           itemBuilder: (context, i) {
-                            var user = data[i];
+                            var userDoc = data[i];
+                            final user = userDoc.data() as Map<String, dynamic>;
+                            print(user['uid']);
                             return ListTile(
                               title: Text(user['email']),
                               subtitle: Text(user['phoneNumber']),
                               onTap: () {
-                                if(user.exists){
-                                  Get.toNamed('/chat', arguments: user['uid']);
+                                if (user.containsKey('uid')) {
+                                  Get.toNamed(
+                                    '/chat',
+                                    arguments: {
+                                      "receiverUID": user['uid'],
+                                      "chatId": "${FirebaseAuth.instance.currentUser!.uid}-${user['uid']}",
+                                    },
+                                  );
                                 }
                               },
                             );

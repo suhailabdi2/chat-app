@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
+import '../controllers/chat_controller.dart';
 
 class ChatListScreen extends GetView<AuthController> {
   ChatListScreen({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
-
+    final chatController = Get.put(ChatController());
     return Scaffold(
       appBar: AppBar(title: const Text('Chats')),
       body: Column(
@@ -23,7 +23,10 @@ class ChatListScreen extends GetView<AuthController> {
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'Search',
-                      prefixIcon: const Icon(Icons.search, color: Color(0xFF00FF85)),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Color(0xFF00FF85),
+                      ),
                       filled: true,
                       fillColor: const Color(0xFF23272A),
                       border: OutlineInputBorder(
@@ -42,36 +45,65 @@ class ChatListScreen extends GetView<AuthController> {
               ],
             ),
           ),
-          StreamBuilder(stream: FirebaseFirestore.instance.collection('chats').snapshots(),
-              builder: (context, snapshot) {
-                if(snapshot.hasError){
-                  return Text("Error ${snapshot.error}");
+          StreamBuilder(
+            stream: FirebaseFirestore.instance.collectionGroup("myChats").where("receiverID", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                print("Error: ${snapshot.error}");
+                return Text("Error ${snapshot.error}");
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final myChats = FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection("myChats").get();
+              myChats.then((value) {
+                value.docs.forEach((element) {
+                  print(element.data());
+                });
+              });
+              if (snapshot.hasData) {
+                print("Snapshot has data. Doc count: ${snapshot.data!.docs.length}");
+                if (snapshot.data!.docs.isEmpty) {
+                  print("No documents found in myChats for this user.");
+                } else {
+                  for (var doc in snapshot.data!.docs)
+                  {
+                    print("Doc ID: ${doc.id}");
+                    print("Data: ${doc.data()}");
+                  }
                 }
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final chats = snapshot.data!.docs;
-                final chatMessages = FirebaseFirestore.instance.collection("chats");
-                return Expanded(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: chats.length,
-                    separatorBuilder: (index,context) => const Divider(height: 1, color: Colors.white12),
-                    itemBuilder: (context, i) {
-                      final chat = chats[i];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: const Color(0xFF00FF85),
-                          child: Text("${i+1}"),
-                        ),
-                        title: Text("${chat.data()['receiverID']}"),
-
-                        onTap: () => Get.toNamed('/chat', arguments: {"chatId":chat.id,"receiverUID":chat.data()['receiverID']}),
-                      );
-                    },
-                  ),
-                );
-              },),
+              } else {
+                print("Snapshot has no data at all.");
+              }
+              final chats = snapshot.data!.docs;
+              print(chats);
+              return Expanded(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: chats.length,
+                  separatorBuilder: (index, context) =>
+                      const Divider(height: 1, color: Colors.white12),
+                  itemBuilder: (context, i) {
+                    final chat = chats[i];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: const Color(0xFF00FF85),
+                        child: Text("${i + 1}"),
+                      ),
+                      title: Text("${chat['receiverID']}"),
+                      onTap: () => Get.toNamed(
+                        '/chat',
+                        arguments: {
+                          "chatId": chat['chatId'],
+                          "receiverUID": chat.data()['receiverID'],
+                        },
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -81,4 +113,4 @@ class ChatListScreen extends GetView<AuthController> {
       ),
     );
   }
-} 
+}

@@ -42,8 +42,7 @@ class ChatDetailScreen extends GetView<AuthController> {
                     final message = messages[index];
                     return Align(
                       alignment:
-                          message['from'] ==
-                              FirebaseAuth.instance.currentUser!.uid
+                          message['from'] == FirebaseAuth.instance.currentUser!.uid
                           ? Alignment.centerRight
                           : Alignment.centerLeft,
                       child: Container(

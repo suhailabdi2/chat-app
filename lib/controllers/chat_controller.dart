@@ -6,6 +6,17 @@ class ChatController {
   String generateChatId(String receiverUID) {
     return "${FirebaseAuth.instance.currentUser!.uid}-$receiverUID";
   }
+  Future<void> createChat(String receiverUID,String receiverName) async {
+    DocumentReference chatDoc = FirebaseFirestore.instance
+        .collection('chats')
+        .doc(generateChatId(receiverUID));
+    chatDoc.set({
+      "messages": [],
+      "receiverID": receiverUID,
+      "receiverName": receiverName,
+    });
+  }
+
 
   // compose the payload to send
   Map<String, dynamic> messagePayload(String receiverUID, String message) {
@@ -15,7 +26,7 @@ class ChatController {
       "message": message,
       "createdAt": "${DateTime
           .now()
-          .hour}/${DateTime
+          .hour}:${DateTime
           .now()
           .minute}",
       "chatId": generateChatId(receiverUID),
@@ -47,11 +58,17 @@ class ChatController {
       chatDoc.doc(chatID).update({"messages": results});
     });
 
-    // items.add(messagePayload(receiverUID, message));
-    // await chatDoc.doc(chatID).update({"messages": items});
-    // print(items);
 
-    // current list of messages
-    // chatDoc.update({"messages": messagePayload(receiverUID, message)});
+  }
+  List fetchUSers(){
+    List users = [];
+    final usersCollection = FirebaseFirestore.instance.collection('users').where('uid', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+    usersCollection.then((value) {
+      value.docs.forEach((element) {
+        users.add(element.data());
+      });
+    });
+    print(users);
+    return users;
   }
 }
