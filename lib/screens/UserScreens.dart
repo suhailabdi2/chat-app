@@ -10,8 +10,15 @@ class UserScreens extends GetView<AuthController> {
   UserScreens({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final chats = controller.chats;
+   Widget build(BuildContext context) {
+    final myChatsSnapshot = FirebaseFirestore.instance
+        .collectionGroup("myChats")
+        .where(
+          "receiverID",
+          isNotEqualTo: FirebaseAuth.instance.currentUser!.uid,
+        );
+    final myChats = myChatsSnapshot.get();
+    print(myChats);
     return Scaffold(
       body: Center(
         child: Row(
@@ -20,39 +27,33 @@ class UserScreens extends GetView<AuthController> {
               child: Row(
                 children: [
                   StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .where(
-                          'uid',
-                          isNotEqualTo: FirebaseAuth.instance.currentUser!.uid,
-                        )
-                        .snapshots(),
+                    stream: FirebaseFirestore.instance.collectionGroup("myChats").where("receiverID", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         Get.snackbar('Error', snapshot.error.toString());
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
-                      }
-                      ;
+                      };
                       final data = snapshot.data!.docs;
+                      print(data);
                       return Expanded(
                         child: ListView.builder(
                           itemCount: data.length,
                           itemBuilder: (context, i) {
                             var userDoc = data[i];
                             final user = userDoc.data() as Map<String, dynamic>;
-                            print(user['uid']);
+                            print(user['receiverEmail']);
                             return ListTile(
-                              title: Text(user['email']),
-                              subtitle: Text(user['phoneNumber']),
+                              title: Text(user['receiverEmail']),
+                              leading: CircleAvatar(),
                               onTap: () {
-                                if (user.containsKey('uid')) {
+                                if (user.containsKey('chatId')) {
                                   Get.toNamed(
                                     '/chat',
                                     arguments: {
-                                      "receiverUID": user['uid'],
-                                      "chatId": "${FirebaseAuth.instance.currentUser!.uid}-${user['uid']}",
+                                      "receiverUID": user['receiverID'],
+                                      "chatId": user['chatId'],
                                     },
                                   );
                                 }

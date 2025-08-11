@@ -55,12 +55,6 @@ class ChatListScreen extends GetView<AuthController> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
-              final myChats = FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection("myChats").get();
-              myChats.then((value) {
-                value.docs.forEach((element) {
-                  print(element.data());
-                });
-              });
               if (snapshot.hasData) {
                 print("Snapshot has data. Doc count: ${snapshot.data!.docs.length}");
                 if (snapshot.data!.docs.isEmpty) {
@@ -90,7 +84,7 @@ class ChatListScreen extends GetView<AuthController> {
                         backgroundColor: const Color(0xFF00FF85),
                         child: Text("${i + 1}"),
                       ),
-                      title: Text("${chat['receiverID']}"),
+                      title: Text("${chat['receiverEmail']}"),
                       onTap: () => Get.toNamed(
                         '/chat',
                         arguments: {

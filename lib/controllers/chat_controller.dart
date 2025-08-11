@@ -17,7 +17,6 @@ class ChatController {
     });
   }
 
-
   // compose the payload to send
   Map<String, dynamic> messagePayload(String receiverUID, String message) {
     return {
@@ -46,7 +45,6 @@ class ChatController {
         .doc(generateChatId(receiverUID));
     chatDoc.update({"messages": messagePayload(receiverUID, message)});
   }
-
   // send the chat message to the server
   Future sendExistingIndividualMessage(String chatID, String message, String receiverUID) async {
     var chatDoc = FirebaseFirestore.instance
@@ -57,8 +55,6 @@ class ChatController {
       print(results);
       chatDoc.doc(chatID).update({"messages": results});
     });
-
-
   }
   List fetchUSers(){
     List users = [];
