@@ -27,7 +27,7 @@ class UserScreens extends GetView<AuthController> {
               child: Row(
                 children: [
                   StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collectionGroup("myChats").where("receiverID", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
+                    stream: FirebaseFirestore.instance.collectionGroup("myChats").where("").where("receiverID", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).where("chatId",).snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         Get.snackbar('Error', snapshot.error.toString());
@@ -38,8 +38,9 @@ class UserScreens extends GetView<AuthController> {
                       final data = snapshot.data!.docs;
                       print(data);
                       return Expanded(
-                        child: ListView.builder(
+                        child: ListView.separated(
                           itemCount: data.length,
+                          separatorBuilder: (index, context) => const Divider (height: 1,color: Colors.white12,),
                           itemBuilder: (context, i) {
                             var userDoc = data[i];
                             final user = userDoc.data() as Map<String, dynamic>;

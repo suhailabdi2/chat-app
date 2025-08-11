@@ -46,13 +46,13 @@ class ChatListScreen extends GetView<AuthController> {
             ),
           ),
           StreamBuilder(
-            stream: FirebaseFirestore.instance.collectionGroup("myChats").where("receiverID", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
+            stream: FirebaseFirestore.instance.collectionGroup("myChats").where("senderId",isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                print("Error: ${snapshot.error}");
+                print(snapshot.error);
                 return Text("Error ${snapshot.error}");
               }
-              if (snapshot.connectionState == ConnectionState.waiting) {
+              if(snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasData) {
@@ -64,6 +64,7 @@ class ChatListScreen extends GetView<AuthController> {
                   {
                     print("Doc ID: ${doc.id}");
                     print("Data: ${doc.data()}");
+                    print("senderId: ${doc.data()['senderId']}");
                   }
                 }
               } else {
@@ -71,6 +72,7 @@ class ChatListScreen extends GetView<AuthController> {
               }
               final chats = snapshot.data!.docs;
               print(chats);
+              print(FirebaseAuth.instance.currentUser!.uid);
               return Expanded(
                 child: ListView.separated(
                   shrinkWrap: true,

@@ -106,13 +106,10 @@ class AuthController extends GetxController {
          );
           isLoading.value = false;
           EmailOTP.sendOTP(email: userEmail);
-
-
     } catch(e){
         Get.snackbar("Error", e.toString());
         isLoading.value=false;
       }
-
   }
 
   void verifyOtp() async {
@@ -122,11 +119,8 @@ class AuthController extends GetxController {
       } else {
         Get.snackbar('Error', 'Invalid OTP');
       }
-
     }
   }
-
-
 
   @override
   void onClose() {
