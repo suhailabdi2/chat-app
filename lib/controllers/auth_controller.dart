@@ -61,12 +61,15 @@ class AuthController extends GetxController {
   void signup() async {
     if(signupFormKey.currentState!.validate()){
       try{
+        final CollectionReference users = FirebaseFirestore.instance.collection('users');
+
         isLoading.value=true;
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailSignUpController.text,
           password: passwordSignInController.text,
         );
-        FirebaseFirestore.instance.collection('users').add({
+        final DocumentReference userDocRef = users.doc(FirebaseAuth.instance.currentUser!.uid);
+        userDocRef.set({
           'email': emailSignUpController.text,
           'password': passwordSignInController.text,
           'phoneNumber': phoneNumberController.text,
@@ -99,7 +102,7 @@ class AuthController extends GetxController {
          EmailOTP.config(
            appName: "Chatify App",
            otpType: OTPType.numeric,
-           expiry : 30000,
+           expiry : 300000,
            emailTheme: EmailTheme.v6,
            appEmail: 'linkedsuhail@gmail.com',
            otpLength: 4,

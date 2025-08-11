@@ -62,7 +62,7 @@ class SignUpScreen extends GetView<AuthController> {
                       controller: controller.phoneNumberController,
                       style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
-                        labelText: 'Enter your Name',
+                        labelText: 'Enter your Number',
                         prefixIcon: Icon(Icons.phone, color: Color(0xFF00FF85)),
                       ),
                       validator: (value) {

@@ -16,7 +16,7 @@ class ChatDetailScreen extends GetView<AuthController> {
     final chatController = Get.put(ChatController());
     final String chatName = Get.arguments['chatId'] ?? 'Chat';
     return Scaffold(
-      appBar: AppBar(title: Text(chatName)),
+      appBar: AppBar(title: Text(Get.arguments["receiverUID"])),
       body: Column(
         children: [
           Expanded(
@@ -31,8 +31,7 @@ class ChatDetailScreen extends GetView<AuthController> {
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
-                }
-                ;
+                };
                 final data = snapshot.data!.data();
                 final messages = data!['messages'];
                 print(messages);
